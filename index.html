@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html lang="en" dir="ltr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edusign - Info System</title>
+
+   
+
+    <!-- Tailwind CSS -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+
+        tailwind.config = {
+
+            theme: {
+
+                extend: {
+
+                    colors: {
+
+                        fjGold: '#FFFFFF',
+
+                        fjNavy: '#262A5C',
+
+                    },
+
+                    fontFamily: {
+
+                        sans: ['Inter', 'Cairo', 'sans-serif'],
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    </script>
+
+    <!--download pdf-->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>    
+
+    <!-- Lucide Icons -->
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+   
+
+    <!-- Fonts -->
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+   
+
+    <!-- FontAwesome -->
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+   
+
+    <!-- Custom Style -->
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body class="bg-slate-50 font-sans text-slate-800 transition-colors duration-200">
+
+
+
+    <!-- Header -->
+
+    <header class="bg-fjNavy border-b border-fjGold/20 h-16 md:h-20 px-3 md:px-6 flex items-center justify-between sticky top-0 z-30 shadow-lg">
+
+        <div class="flex items-center gap-2 md:gap-4 shrink-0">
+
+           
+
+            <!-- Logo Section -->
+
+            <div class="flex items-center gap-1.5 md:gap-3 shrink-0">
+
+                <div class="flex flex-col items-center justify-center mt-0.5 md:mt-0">
+
+                    <!-- Title: Always Inline -->
+
+                    <span class="font-black text-[12px] sm:text-[16px] md:text-xl lg:text-2xl tracking-tight text-fjGold uppercase leading-none">
+
+                        Edu<span style="color: #971F22;" class="font-black">sign</span>
+
+                    </span>
+
+                    <!-- Slogan: Centered under title -->
+
+                    <span class="text-[5px] sm:text-[7px] md:text-[9px] text-fjGold/90 tracking-[0.1em] sm:tracking-[0.15em] font-medium mt-0.5 md:mt-1 whitespace-nowrap uppercase text-center w-full">
+
+                       
+
+                    </span>
+
+                </div>
+
+            </div>
+
+           
+
+            <div class="h-6 md:h-8 w-px bg-fjGold/20 mx-1 hidden sm:block"></div>
+
+           
+
+            <span id="program-count" class="hidden lg:inline-block bg-fjGold/10 text-fjGold border border-fjGold/30 text-xs px-2 py-0.5 rounded font-mono font-semibold whitespace-nowrap">0 Programs</span>
+
+            <div id="loading-spinner" class="hidden animate-spin text-fjGold">
+
+                <i data-lucide="loader-2" width="16"></i>
+
+            </div>
+
+        </div>
+
+       
+
+        <!-- Search Bar with padding fixes for icon overlap -->
+
+        <div class="flex-1 max-w-2xl mx-1.5 sm:mx-3 md:mx-8 relative group">
+
+            <i data-lucide="search" width="16" class="absolute left-2.5 rtl:left-auto rtl:right-2.5 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-fjGold transition-colors pointer-events-none"></i>
+
+            <input
+
+                type="text"
+
+                id="search-input"
+
+                placeholder="Quick Search..."
+
+                class="w-full py-1.5 md:py-2.5 pl-8 pr-3 rtl:pr-8 rtl:pl-3 rounded-lg border border-slate-700 bg-[#151D2E] focus:bg-fjNavy focus:ring-2 focus:ring-fjGold/30 focus:border-fjGold/50 transition-all text-[13px] md:text-sm outline-none text-slate-200 placeholder:text-slate-500"
+
+            >
+
+        </div>
+
+
+
+        <div class="flex items-center gap-1.5 md:gap-3 shrink-0">
+
+            <button onclick="toggleLanguage()" class="flex items-center justify-center w-8 h-8 md:w-auto md:h-auto md:px-3 md:py-1.5 rounded-lg border border-fjGold/30 hover:bg-fjGold hover:text-fjNavy transition-all text-sm font-semibold text-fjGold">
+
+                <i data-lucide="globe" width="16"></i>
+
+                <span id="lang-label" class="hidden md:inline ml-2 rtl:mr-2 rtl:ml-0">العربية</span>
+
+            </button>
+
+
+
+            <button onclick="fetchData()" class="flex items-center justify-center w-8 h-8 md:w-auto md:h-auto md:p-2.5 text-fjGold/70 hover:bg-fjGold/10 hover:text-fjGold rounded-lg transition-all" title="Refresh">
+
+                <i data-lucide="refresh-cw" width="18"></i>
+
+            </button>
+
+
+
+            <!-- أيقونة الواتساب (غير الرقم هنا) -->
+
+            <a href="https://wa.me/905550000000" target="_blank" class="flex items-center justify-center w-8 h-8 md:w-auto md:h-auto md:p-2.5 text-fjGold/70 hover:bg-[#25D366]/10 hover:text-[#25D366] rounded-lg transition-all" title="Contact Us">
+
+                <i class="fa-brands fa-whatsapp text-[20px]"></i>
+
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- Main Content -->
+
+    <main class="flex-1 p-3 md:p-6 space-y-4 md:space-y-6 h-[calc(100vh-64px)] md:h-[calc(100vh-80px)] overflow-y-auto custom-scrollbar">
+
+       
+
+        <!-- Filters -->
+
+        <div class="bg-white p-4 md:p-6 rounded-xl shadow-sm border border-slate-200 space-y-4" id="filters-container">
+
+            <!-- Dynamic Filters -->
+
+        </div>
+
+
+
+        <!-- Action Bar -->
+
+        <div class="flex justify-between items-center">
+
+            <div class="flex gap-3">
+
+                <button class="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-fjNavy hover:text-fjGold hover:border-fjNavy transition-all shadow-sm" data-action="download">
+
+                    <i data-lucide="download" width="16"></i> <span data-i18n="download">Download PDF</span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Table -->
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden min-h-[400px]">
+
+            <!-- Table Header (Hidden on Mobile) -->
+
+            <div class="hidden md:grid grid-cols-12 bg-fjNavy border-b border-fjGold/20 py-4 px-6 text-xs font-bold text-fjGold uppercase tracking-wider">
+
+                <div class="col-span-3" data-i18n="colProgram">Program</div>
+
+                <div class="col-span-3" data-i18n="colUniversity">University</div>
+
+                <div class="col-span-3" data-i18n="colInfo">Information</div>
+
+                <div class="col-span-3" data-i18n="colAddress">Address</div>
+
+            </div>
+
+           
+
+            <!-- Table Body -->
+
+            <div id="programs-list" class="divide-y divide-slate-100">
+
+                <!-- Data Rows -->
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+
+    <!-- Logic Script -->
+
+    <script src="js/config.js"></script>
+
+    <script src="js/data.js"></script>
+
+    <script src="js/ui.js"></script>
+
+    <script src="js/export.js"></script>
+
+    <script src="js/main.js"></script>
+
+</body>
+
+</html>
